@@ -9,7 +9,7 @@ class Board extends React.Component {
   };
   createBoardArray(x, y) {
     let newArray = Array(x).fill(undefined);
-    return newArray.map(() => Array(y).fill(undefined));
+    return newArray.map(() => Array(y).fill(new Tile()));
   }
 
   // createBoard():
@@ -21,13 +21,12 @@ class Board extends React.Component {
   //   display win/lose
 
   render() {
-    console.log(this.state.boardArray);
-    const testArray = [["a", "b", "c"], ["d", "e", "f"], ["g", "h", "i"]];
+    let keyTest = 0;
     return (
       <div id="grid">
-        {testArray.map(row => (
-          <p key={row}>{row.map(tile => <p key={tile}>{tile}</p>)}</p>
-        ))}
+        {this.state.boardArray.map(row =>
+          row.map(tile => <p key={keyTest++}>{tile.state.value}</p>)
+        )}
       </div>
     );
   }

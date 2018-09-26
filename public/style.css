@@ -3,7 +3,8 @@ body {
 }
 
 #grid {
+  /* background-color: yellow; */
   display: grid;
-  grid-template-columns: repeat(3, 32px);
-  grid-template-rows: repeat(3, 32px);
+  grid-template-columns: repeat(30, 32px);
+  grid-template-rows: repeat(16, 32px);
 }
