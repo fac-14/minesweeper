@@ -9,25 +9,26 @@ class Board extends React.Component {
   };
 
   createBoardArray(x, y) {
-    const newArray = [];
+    let newArray = [];
     for (let i = 0; i < x; i++) {
       newArray.push([]);
       for (let j = 0; j < y; j++) {
-        newArray[i].push(new Tile());
+        newArray[i].push({ value: 0, displayed: false });
       }
     }
+    newArray = this.initialiseBoard(newArray);
+    // console.log(newArray);
     return newArray;
   }
 
-  initialiseBoard = () => {
+  initialiseBoard(board) {
     let mines = 0;
     while (mines < 99) {
       let x = getRandomInt(16),
         y = getRandomInt(30);
-      if (this.state.boardArray[x][y].state.value !== "M") {
+      if (board[x][y].value !== "M") {
         mines++;
-        let newBoard = this.state.boardArray.slice(0);
-        newBoard = this.addMine(newBoard, x, y);
+        board = this.addMine(board, x, y);
         for (let i = -1; i < 2; i++) {
           for (let j = -1; j < 2; j++) {
             let row = x + i;
@@ -36,29 +37,21 @@ class Board extends React.Component {
             let col = y + j;
             col = col < 0 ? 0 : col;
             col = col > 29 ? 29 : col;
-            if (newBoard[row][col].state.value !== "M") {
-              newBoard[row][col].state.value += 1;
+            if (board[row][col].value !== "M") {
+              board[row][col].value += 1;
             }
           }
         }
-        this.setState(() => {
-          return {
-            boardArray: newBoard
-          };
-        });
       }
     }
-  };
+    return board;
+  }
 
   addMine(boardArray, x, y) {
     const newBoard = boardArray;
-    newBoard[x][y].state.value = "M";
+    newBoard[x][y].value = "M";
     return newBoard;
   }
-
-  // createBoard():
-  //   place 99 random mines
-  //   set correct numbers
 
   // endGame(win/lose):
   //   display board
@@ -66,15 +59,17 @@ class Board extends React.Component {
 
   render() {
     let keyTest = 0;
-    // this.initialiseBoard();
     return (
       <div>
-        <button id="button" onClick={this.initialiseBoard}>
-          Button
-        </button>
         <div id="grid">
           {this.state.boardArray.map(row =>
-            row.map(tile => <p key={keyTest++}>{tile.state.value}</p>)
+            row.map(tile => (
+              <Tile
+                value={tile.value}
+                displayed={tile.displayed}
+                key={keyTest++}
+              />
+            ))
           )}
         </div>
       </div>
