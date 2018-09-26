@@ -1,0 +1,9 @@
+body {
+  background-color: hotpink;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(3, 32px);
+  grid-template-rows: repeat(3, 32px);
+}
