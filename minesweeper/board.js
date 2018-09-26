@@ -30,10 +30,35 @@ class Board extends React.Component {
       // if no mine:
       if (this.state.boardArray[x][y].state.value !== "M") {
         mines++;
+        let newBoard = this.state.boardArray.slice(0);
+        newBoard = this.addMine(newBoard, x, y);
+        for (let i = -1; i < 2; i++) {
+          for (let j = -1; j < 2; j++) {
+            let row, col;
+            if (x + i < 0) {
+              row = 0;
+            } else if (x + i > 15) {
+              row = 15;
+            } else {
+              row = x + i;
+            }
+            if (y + j < 0) {
+              col = 0;
+            } else if (y + j > 29) {
+              col = 29;
+            } else {
+              col = y + j;
+            }
+
+            if (newBoard[row][col].state.value !== "M") {
+              newBoard[row][col].state.value += 1;
+            }
+          }
+        }
         //   place mine
-        this.setState(prevState => {
+        this.setState(() => {
           return {
-            boardArray: this.addMine(prevState.boardArray, x, y)
+            boardArray: newBoard
           };
         });
 
