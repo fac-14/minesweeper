@@ -21,37 +21,28 @@ class Board extends React.Component {
 
   initialiseBoard = () => {
     let mines = 0;
-    // while (mines < 99) {
-    // get random x, y numbers (range 0-99)
-    let x = getRandomInt(16),
-      y = getRandomInt(30);
+    while (mines < 99) {
+      // get random x, y numbers (range 0-99)
+      let x = getRandomInt(16),
+        y = getRandomInt(30);
 
-    return this.setState(prevState => {
-      const newBoardArray = prevState.boardArray;
-      console.log(newBoardArray[x][y]);
-      newBoardArray[x][y].state.value = "X";
-      return {
-        boardArray: newBoardArray
-      };
-    });
-    // check that tile for mine
-    // // if no mine:
-    // if (this.state.boardArray[x][y].state.value !== "M") {
-    //   mines++;
-    //   //   place mine
-    //   this.setState(prevState => {
-    //     const newBoardArray = this.addMine(prevState.boardArray, x, y);
-    //     console.log(newBoardArray);
-    //     // return {
-    //     //   boardArray: newBoardArray
-    //     // };
-    //   });
-    //   for all surrounding tiles, if not mine add 1 to value
-    // }
+      // check that tile for mine
+      // if no mine:
+      if (this.state.boardArray[x][y].state.value !== "M") {
+        mines++;
+        //   place mine
+        this.setState(prevState => {
+          return {
+            boardArray: this.addMine(prevState.boardArray, x, y)
+          };
+        });
 
-    // else:
-    //   loop again
-    // }
+        //for all surrounding tiles, if not mine add 1 to value
+      }
+
+      // else:
+      //   loop again
+    }
   };
 
   addMine(boardArray, x, y) {
