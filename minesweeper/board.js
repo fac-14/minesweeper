@@ -5,8 +5,12 @@ import Tile from "./tile";
 class Board extends React.Component {
   state = {
     // mines
-    // boardArray
+    boardArray: this.createBoardArray(16, 30)
   };
+  createBoardArray(x, y) {
+    let newArray = Array(x).fill(undefined);
+    return newArray.map(() => Array(y).fill(undefined));
+  }
 
   // createBoard():
   //   place 99 random mines
@@ -17,6 +21,7 @@ class Board extends React.Component {
   //   display win/lose
 
   render() {
+    console.log(this.state.boardArray);
     const testArray = [["a", "b", "c"], ["d", "e", "f"], ["g", "h", "i"]];
     return (
       <div id="grid">

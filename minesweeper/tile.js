@@ -4,7 +4,7 @@ import Board from "./board";
 
 class Tile extends React.Component {
   state = {
-    // value
+    value: 0
     // displayed (bool)
     // emoji file
   };
