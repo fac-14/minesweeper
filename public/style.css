@@ -1,5 +1,8 @@
 body {
   background-color: hotpink;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 #grid {
@@ -7,4 +10,22 @@ body {
   display: grid;
   grid-template-columns: repeat(30, 32px);
   grid-template-rows: repeat(16, 32px);
+}
+
+.tile {
+  background-color: #bdbdbd;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom-color: #7b7b7b;
+  border-right-color: #7b7b7b;
+  border-top-color: #ffffff;
+  border-left-color: #ffffff;
+  border-style: solid;
+  border-width: medium;
+}
+
+.tile--revealed {
+  border-width: thin;
 }

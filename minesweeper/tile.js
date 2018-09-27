@@ -44,10 +44,31 @@ class Tile extends React.Component {
     }
   }
 
+  displayEmoji(value) {
+    const emojiObj = {
+      1: "../public/img/1.png",
+      2: "../public/img/2.png",
+      3: "../public/img/3.png",
+      4: "../public/img/4.png",
+      5: "../public/img/5.png",
+      6: "../public/img/6.png",
+      7: "../public/img/6.png",
+      8: "../public/img/6.png",
+      9: "../public/img/6.png",
+      M: "../public/img/M.png"
+    };
+    return emojiObj[value];
+  }
+
   render() {
     return (
-      <div onClick={this.state.displayed ? () => {} : this.click()}>
-        {this.state.displayed ? this.state.value : "*"}
+      <div
+        className={this.state.displayed ? "tile tile--revealed" : "tile"}
+        onClick={this.state.displayed ? () => {} : this.click()}
+      >
+        <img
+          src={this.state.displayed ? this.displayEmoji(this.state.value) : ""}
+        />
       </div>
     );
   }
