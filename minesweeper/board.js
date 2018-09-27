@@ -11,14 +11,15 @@ class Board extends React.Component {
 
   createBoardArray(x, y) {
     let newArray = [];
+    let id = 0;
     for (let i = 0; i < x; i++) {
       newArray.push([]);
       for (let j = 0; j < y; j++) {
-        newArray[i].push({ value: 0, displayed: false });
+        newArray[i].push({ value: 0, displayed: false, id });
+        id++;
       }
     }
     newArray = this.initialiseBoard(newArray);
-    // console.log(newArray);
     return newArray;
   }
 
@@ -32,14 +33,10 @@ class Board extends React.Component {
         board = this.addMine(board, x, y);
         for (let i = -1; i < 2; i++) {
           for (let j = -1; j < 2; j++) {
-            let row = x + i;
+            let row = x + i,
+              col = y + j;
             if (row < 0 || row > 15) break;
-            row = row < 0 ? 0 : row;
-            row = row > 15 ? 15 : row;
-            let col = y + j;
             if (col < 0 || col > 29) break;
-            col = col < 0 ? 0 : col;
-            col = col > 29 ? 29 : col;
             if (board[row][col].value !== "M") {
               board[row][col].value += 1;
             }
@@ -56,25 +53,44 @@ class Board extends React.Component {
     return newBoard;
   }
 
-  revealTile() {
+  revealTile(tileId) {
     this.setState(prevState => {
-      console.log("revealed tiles:", this.state.revealedTiles);
+      for (let i = 0; i < prevState.boardArray.length; i++) {
+        for (let j = 0; j < prevState.boardArray[i].length; j++) {
+          if (prevState.boardArray[i][j].id === tileId) {
+            prevState.boardArray[i][j].displayed = true;
+          }
+        }
+      }
       return {
+        boardArray: prevState.boardArray,
         revealedTiles: prevState.revealedTiles + 1
       };
     });
   }
 
-  // endGame(win):
-  //  if (win)
-  //    reveal everything
-  //    add some fun UI
-  //  else
-  //    reveal everything
-  //    add some anger UI
+  endGame(win) {
+    // if (true) {
+    this.setState(prevState => {
+      prevState.boardArray.forEach(row =>
+        row.forEach(tile => {
+          tile.displayed = true;
+        })
+      );
+      return {
+        boardArray: prevState.boardArray
+      };
+    });
+    // );
+    //    reveal everything
+    //    add some fun UI
+    // } else {
+    //    reveal everything
+    //    add some anger UI
+    // }
+  }
 
   render() {
-    let keyTest = 0;
     return (
       <div>
         <div id="grid">
@@ -83,8 +99,9 @@ class Board extends React.Component {
               <Tile
                 value={tile.value}
                 displayed={tile.displayed}
+                id={tile.id}
                 parentBoard={this}
-                key={keyTest++}
+                key={tile.id}
               />
             ))
           )}

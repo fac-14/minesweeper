@@ -5,7 +5,8 @@ import PropTypes from "prop-types";
 class Tile extends React.Component {
   state = {
     value: this.props.value,
-    displayed: false,
+    displayed: this.props.displayed,
+    id: this.props.id,
     parentBoard: this.props.parentBoard
     // emoji file
   };
@@ -19,29 +20,26 @@ class Tile extends React.Component {
     });
   }
 
-  reveal() {
-    this.setState(prevState => {
-      return {
-        value: prevState.value,
-        displayed: true
-      };
-    });
+  static getDerivedStateFromProps(props) {
+    const { value, displayed } = props;
+    return {
+      value,
+      displayed
+    };
   }
 
-  // onClick = Tile.click()
   click() {
     if (this.state.value === "M") {
       return () => {
-        //  endGame(false) --> call function in another class
+        this.state.parentBoard.endGame(false);
       };
     } else if (this.state.parentBoard.state.revealedTiles < 381) {
       return () => {
-        this.state.parentBoard.revealTile();
-        this.reveal();
+        this.state.parentBoard.revealTile(this.state.id);
       };
     } else {
       return () => {
-        // endGame(true);
+        this.state.parentBoard.endGame(true);
       };
     }
   }
@@ -58,6 +56,7 @@ class Tile extends React.Component {
 Tile.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   displayed: PropTypes.bool,
+  id: PropTypes.number,
   parentBoard: PropTypes.object
 };
 
