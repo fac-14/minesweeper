@@ -32,11 +32,11 @@ class Board extends React.Component {
         for (let i = -1; i < 2; i++) {
           for (let j = -1; j < 2; j++) {
             let row = x + i;
-            if (row < 0 || row > 15) return;
+            if (row < 0 || row > 15) break;
             row = row < 0 ? 0 : row;
             row = row > 15 ? 15 : row;
             let col = y + j;
-            if (col < 0 || col > 29) return;
+            if (col < 0 || col > 29) break;
             col = col < 0 ? 0 : col;
             col = col > 29 ? 29 : col;
             if (board[row][col].value !== "M") {
