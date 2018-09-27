@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 class Tile extends React.Component {
   state = {
     value: this.props.value,
-    displayed: false
+    displayed: this.props.displayed,
+    id: this.props.id,
+    parentBoard: this.props.parentBoard
     // emoji file
   };
 
@@ -18,29 +20,33 @@ class Tile extends React.Component {
     });
   }
 
-  reveal() {
-    return () => {
-      this.setState(prevState => {
-        return {
-          value: prevState.value,
-          displayed: true
-        };
-      });
+  static getDerivedStateFromProps(props) {
+    const { value, displayed } = props;
+    return {
+      value,
+      displayed
     };
   }
 
-  // onClick = Tile.click()
-  // click():
-  //   if tile.value === 'M'
-  //    endGame(false) --> call function in another class
-  //  else if (revealedTiles < 381)
-  //    reveal(remember to +1 to revealTiles)
-  //  else
-  //    endGame(true)
+  click() {
+    if (this.state.value === "M") {
+      return () => {
+        this.state.parentBoard.endGame(false);
+      };
+    } else if (this.state.parentBoard.state.revealedTiles < 381) {
+      return () => {
+        this.state.parentBoard.revealTile(this.state.id);
+      };
+    } else {
+      return () => {
+        this.state.parentBoard.endGame(true);
+      };
+    }
+  }
 
   render() {
     return (
-      <div onClick={this.reveal()}>
+      <div onClick={this.state.displayed ? () => {} : this.click()}>
         {this.state.displayed ? this.state.value : "*"}
       </div>
     );
@@ -49,7 +55,9 @@ class Tile extends React.Component {
 
 Tile.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  displayed: PropTypes.bool
+  displayed: PropTypes.bool,
+  id: PropTypes.number,
+  parentBoard: PropTypes.object
 };
 
 export default Tile;

@@ -15,4 +15,10 @@ describe("Testing Board properties and methods", () => {
     expect(testBoard.state.boardArray[0].length).toBe(30);
     expect(testBoard.state.boardArray[0][0] instanceof Object).toBeTruthy();
   });
+  test("addMine() can add mine in specific place", () => {
+    expect(
+      Array.isArray(testBoard.addMine(testBoard.state.boardArray, 0, 0))
+    ).toBeTruthy();
+    expect(testBoard.state.boardArray[0][0].value).toBe("M");
+  });
 });
