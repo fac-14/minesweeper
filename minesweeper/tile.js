@@ -1,24 +1,55 @@
 import React from "react";
-import Board from "./board";
+import PropTypes from "prop-types";
 // import some funcationality some utils
 
 class Tile extends React.Component {
   state = {
-    // value
-    // displayed (bool)
+    value: this.props.value,
+    displayed: false
     // emoji file
   };
 
-  // click():
-  //   if num: display num
-  //   if mine: endGame(fail)
+  componentDidMount() {
+    this.setState(() => {
+      return {
+        value: this.props.value,
+        displayed: this.props.displayed
+      };
+    });
+  }
 
-  // flip():
-  //   display self
+  reveal() {
+    return () => {
+      this.setState(prevState => {
+        return {
+          value: prevState.value,
+          displayed: true
+        };
+      });
+    };
+  }
+
+  // onClick = Tile.click()
+  // click():
+  //   if tile.value === 'M'
+  //    endGame(false) --> call function in another class
+  //  else if (revealedTiles < 381)
+  //    reveal(remember to +1 to revealTiles)
+  //  else
+  //    endGame(true)
 
   render() {
-    return "a";
+    return (
+      <div onClick={this.reveal()}>
+        {this.state.displayed ? this.state.value : "*"}
+      </div>
+    );
   }
 }
+
+Tile.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  displayed: PropTypes.bool
+};
 
 export default Tile;
