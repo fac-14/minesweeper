@@ -55,9 +55,13 @@ class Board extends React.Component {
     return newBoard;
   }
 
-  // endGame(win/lose):
-  //   display board
-  //   display win/lose
+  // endGame(win):
+  //  if (win)
+  //    reveal everything
+  //    add some fun UI
+  //  else
+  //    reveal everything
+  //    add some anger UI
 
   render() {
     let keyTest = 0;

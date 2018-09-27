@@ -29,9 +29,14 @@ class Tile extends React.Component {
     };
   }
 
+  // onClick = Tile.click()
   // click():
-  //   if num: display num
-  //   if mine: endGame(fail)
+  //   if tile.value === 'M'
+  //    endGame(false) --> call function in another class
+  //  else if (revealedTiles < 381)
+  //    reveal(remember to +1 to revealTiles)
+  //  else
+  //    endGame(true)
 
   render() {
     return (
