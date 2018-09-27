@@ -79,7 +79,7 @@ class Board extends React.Component {
         }
       }
       return {
-        boardArray: prevState.boardArray,
+        boardArray: newBoardArray,
         revealedTiles: prevState.revealedTiles + 1
       };
     });
