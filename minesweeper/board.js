@@ -5,7 +5,8 @@ import getRandomInt from "../utils/random-number";
 
 class Board extends React.Component {
   state = {
-    boardArray: this.createBoardArray(16, 30)
+    boardArray: this.createBoardArray(16, 30),
+    revealedTiles: 0
   };
 
   createBoardArray(x, y) {
@@ -55,6 +56,15 @@ class Board extends React.Component {
     return newBoard;
   }
 
+  revealTile() {
+    this.setState(prevState => {
+      console.log("revealed tiles:", this.state.revealedTiles);
+      return {
+        revealedTiles: prevState.revealedTiles + 1
+      };
+    });
+  }
+
   // endGame(win):
   //  if (win)
   //    reveal everything
@@ -73,6 +83,7 @@ class Board extends React.Component {
               <Tile
                 value={tile.value}
                 displayed={tile.displayed}
+                parentBoard={this}
                 key={keyTest++}
               />
             ))
