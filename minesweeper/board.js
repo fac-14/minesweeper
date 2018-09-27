@@ -53,12 +53,28 @@ class Board extends React.Component {
     return newBoard;
   }
 
+  revealZeroNeighbours(newBoardArray, x, y) {
+    for (let i = -1; i < 2; i++) {
+      for (let j = -1; j < 2; j++) {
+        let row = x + i,
+          col = y + j;
+        if (row < 0 || row > 15) break;
+        if (col < 0 || col > 29) break;
+        newBoardArray[row][col].displayed = true;
+      }
+    }
+  }
+
   revealTile(tileId) {
     this.setState(prevState => {
-      for (let i = 0; i < prevState.boardArray.length; i++) {
-        for (let j = 0; j < prevState.boardArray[i].length; j++) {
-          if (prevState.boardArray[i][j].id === tileId) {
-            prevState.boardArray[i][j].displayed = true;
+      const newBoardArray = prevState.boardArray;
+      for (let i = 0; i < newBoardArray.length; i++) {
+        for (let j = 0; j < newBoardArray[i].length; j++) {
+          if (newBoardArray[i][j].id === tileId) {
+            newBoardArray[i][j].displayed = true;
+            if (newBoardArray[i][j].value == 0) {
+              this.revealZeroNeighbours(newBoardArray, i, j);
+            }
           }
         }
       }
