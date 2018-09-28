@@ -123,7 +123,12 @@ class Board extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="board">
+        <h1>Lose Your MindSweeper </h1>
+        <p>
+          Try to make it through all exercises of this FAC morning challenge
+          without losing your mind in frustration{" "}
+        </p>
         <div id="grid">
           {this.state.boardArray.map(row =>
             row.map(tile => (
