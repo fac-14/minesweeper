@@ -3,10 +3,18 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  font-family: "Lato", sans-serif;
+  font-size: 1.2rem;
+}
+
+#board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #grid {
-  /* background-color: yellow; */
+  margin: auto;
   display: grid;
   grid-template-columns: repeat(30, 32px);
   grid-template-rows: repeat(16, 32px);
@@ -34,3 +42,7 @@ body {
   width: 24px;
   height: 24px;
 }
+
+/* .tile-number {
+
+} */
