@@ -29,3 +29,8 @@ body {
 .tile--revealed {
   border-width: thin;
 }
+
+.tile-emoji {
+  width: 24px;
+  height: 24px;
+}
