@@ -15,7 +15,6 @@ class Tile extends React.Component {
     displayed: this.props.displayed,
     id: this.props.id,
     parentBoard: this.props.parentBoard
-    // emoji file
   };
 
   componentDidMount() {

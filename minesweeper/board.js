@@ -35,10 +35,10 @@ class Board extends React.Component {
           for (let j = -1; j < 2; j++) {
             let row = x + i,
               col = y + j;
-            if (row < 0 || row > 15) break;
-            if (col < 0 || col > 29) break;
-            if (board[row][col].value !== "M") {
-              board[row][col].value += 1;
+            if (row >= 0 && row < 16 && col >= 0 && col < 30) {
+              if (board[row][col].value !== "M") {
+                board[row][col].value += 1;
+              }
             }
           }
         }
@@ -58,12 +58,12 @@ class Board extends React.Component {
       for (let j = -1; j < 2; j++) {
         let row = x + i,
           col = y + j;
-        if (row < 0 || row > 15) break;
-        if (col < 0 || col > 29) break;
-        if (!newBoardArray[row][col].displayed) {
-          newBoardArray[row][col].displayed = true;
-          if (newBoardArray[row][col].value == 0) {
-            this.revealZeroNeighbours(newBoardArray, row, col);
+        if (row >= 0 && row < 16 && col >= 0 && col < 30) {
+          if (!newBoardArray[row][col].displayed) {
+            newBoardArray[row][col].displayed = true;
+            if (newBoardArray[row][col].value == 0) {
+              this.revealZeroNeighbours(newBoardArray, row, col);
+            }
           }
         }
       }
