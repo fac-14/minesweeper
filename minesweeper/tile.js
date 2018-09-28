@@ -17,15 +17,6 @@ class Tile extends React.Component {
     parentBoard: this.props.parentBoard
   };
 
-  componentDidMount() {
-    this.setState(() => {
-      return {
-        value: this.props.value,
-        displayed: this.props.displayed
-      };
-    });
-  }
-
   static getDerivedStateFromProps(props) {
     const { value, displayed } = props;
     return {
