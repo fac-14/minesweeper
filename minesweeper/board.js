@@ -5,22 +5,22 @@ import getRandomInt from "../utils/random-number";
 
 class Board extends React.Component {
   state = {
-    boardArray: this.createBoardArray(16, 30),
+    boardArray: this.createBoard(16, 30),
     revealedTiles: 0
   };
 
-  createBoardArray(x, y) {
-    let newArray = [];
+  createBoard(x, y) {
+    let board = [];
     let id = 0;
     for (let i = 0; i < x; i++) {
-      newArray.push([]);
+      board.push([]);
       for (let j = 0; j < y; j++) {
-        newArray[i].push({ value: 0, displayed: false, id });
+        board[i].push({ value: 0, displayed: false, id });
         id++;
       }
     }
-    newArray = this.initialiseBoard(newArray);
-    return newArray;
+    board = this.initialiseBoard(board);
+    return board;
   }
 
   initialiseBoard(board) {
@@ -47,22 +47,28 @@ class Board extends React.Component {
     return board;
   }
 
-  addMine(boardArray, x, y) {
-    const newBoard = boardArray;
+  addMine(board, x, y) {
+    const newBoard = board.map(row =>
+      row.map(tile => ({
+        value: tile.value,
+        displayed: tile.displayed,
+        id: tile.id
+      }))
+    );
     newBoard[x][y].value = "M";
     return newBoard;
   }
 
-  revealZeroNeighbours(newBoardArray, x, y) {
+  revealZeroNeighbours(board, x, y) {
     for (let i = -1; i < 2; i++) {
       for (let j = -1; j < 2; j++) {
         let row = x + i,
           col = y + j;
         if (row >= 0 && row < 16 && col >= 0 && col < 30) {
-          if (!newBoardArray[row][col].displayed) {
-            newBoardArray[row][col].displayed = true;
-            if (newBoardArray[row][col].value == 0) {
-              this.revealZeroNeighbours(newBoardArray, row, col);
+          if (!board[row][col].displayed) {
+            board[row][col].displayed = true;
+            if (board[row][col].value == 0) {
+              this.revealZeroNeighbours(board, row, col);
             }
           }
         }
@@ -72,19 +78,25 @@ class Board extends React.Component {
 
   revealTile(tileId) {
     this.setState(prevState => {
-      const newBoardArray = prevState.boardArray;
-      for (let i = 0; i < newBoardArray.length; i++) {
-        for (let j = 0; j < newBoardArray[i].length; j++) {
-          if (newBoardArray[i][j].id === tileId) {
-            newBoardArray[i][j].displayed = true;
-            if (newBoardArray[i][j].value == 0) {
-              this.revealZeroNeighbours(newBoardArray, i, j);
+      const board = prevState.boardArray.map(row =>
+        row.map(tile => ({
+          value: tile.value,
+          displayed: tile.displayed,
+          id: tile.id
+        }))
+      );
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+          if (board[i][j].id === tileId) {
+            board[i][j].displayed = true;
+            if (board[i][j].value == 0) {
+              this.revealZeroNeighbours(board, i, j);
             }
           }
         }
       }
       return {
-        boardArray: newBoardArray,
+        boardArray: board,
         revealedTiles: prevState.revealedTiles + 1
       };
     });
@@ -93,13 +105,11 @@ class Board extends React.Component {
   endGame(win) {
     // if (true) {
     this.setState(prevState => {
-      prevState.boardArray.forEach(row =>
-        row.forEach(tile => {
-          tile.displayed = true;
-        })
+      const endGameBoard = prevState.boardArray.map(row =>
+        row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
       );
       return {
-        boardArray: prevState.boardArray
+        boardArray: endGameBoard
       };
     });
     // );
