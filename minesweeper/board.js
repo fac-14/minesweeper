@@ -60,7 +60,12 @@ class Board extends React.Component {
           col = y + j;
         if (row < 0 || row > 15) break;
         if (col < 0 || col > 29) break;
-        newBoardArray[row][col].displayed = true;
+        if (!newBoardArray[row][col].displayed) {
+          newBoardArray[row][col].displayed = true;
+          if (newBoardArray[row][col].value == 0) {
+            this.revealZeroNeighbours(newBoardArray, row, col);
+          }
+        }
       }
     }
   }
@@ -79,7 +84,7 @@ class Board extends React.Component {
         }
       }
       return {
-        boardArray: prevState.boardArray,
+        boardArray: newBoardArray,
         revealedTiles: prevState.revealedTiles + 1
       };
     });
