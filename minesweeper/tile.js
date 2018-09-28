@@ -10,33 +10,18 @@ import emojiMine from "../public/img/M.png";
 // import some funcationality some utils
 
 class Tile extends React.Component {
-  state = {
-    value: this.props.value,
-    displayed: this.props.displayed,
-    id: this.props.id,
-    parentBoard: this.props.parentBoard
-  };
-
-  static getDerivedStateFromProps(props) {
-    const { value, displayed } = props;
-    return {
-      value,
-      displayed
-    };
-  }
-
   click() {
-    if (this.state.value === "M") {
+    if (this.props.value === "M") {
       return () => {
-        this.state.parentBoard.endGame(false);
+        this.props.parentBoard.endGame(false);
       };
-    } else if (this.state.parentBoard.state.revealedTiles < 381) {
+    } else if (this.props.parentBoard.state.revealedTiles < 381) {
       return () => {
-        this.state.parentBoard.revealTile(this.state.id);
+        this.props.parentBoard.revealTile(this.props.id);
       };
     } else {
       return () => {
-        this.state.parentBoard.endGame(true);
+        this.props.parentBoard.endGame(true);
       };
     }
   }
@@ -60,13 +45,13 @@ class Tile extends React.Component {
   render() {
     return (
       <div
-        className={this.state.displayed ? "tile tile--revealed" : "tile"}
-        onClick={this.state.displayed ? () => {} : this.click()}
+        className={this.props.displayed ? "tile tile--revealed" : "tile"}
+        onClick={this.props.displayed ? () => {} : this.click()}
       >
-        {this.state.displayed ? (
+        {this.props.displayed ? (
           <img
             className="tile-emoji"
-            src={this.displayEmoji(this.state.value)}
+            src={this.displayEmoji(this.props.value)}
           />
         ) : (
           ""
