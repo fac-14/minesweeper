@@ -97,22 +97,32 @@ class Board extends React.Component {
   }
 
   endGame(win) {
-    // if (true) {
-    this.setState(prevState => {
-      const endGameBoard = prevState.boardArray.map(row =>
-        row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
-      );
-      return {
-        boardArray: endGameBoard
-      };
-    });
-    // );
-    //    reveal everything
-    //    add some fun UI
-    // } else {
-    //    reveal everything
-    //    add some anger UI
-    // }
+    if (win) {
+      this.setState(prevState => {
+        const endGameBoard = prevState.boardArray.map(row =>
+          row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
+        );
+        return {
+          boardArray: endGameBoard
+        };
+      });
+      //    add some fun UI
+    } else {
+      this.setState(prevState => {
+        const endGameBoard = prevState.boardArray.map(row =>
+          row.map(tile => ({
+            value: tile.value,
+            displayed: tile.value == "M" ? true : tile.displayed,
+            id: tile.id
+          }))
+        );
+        return {
+          boardArray: endGameBoard
+        };
+      });
+      //    reveal everything
+      //    add some anger UI
+    }
   }
 
   render() {
