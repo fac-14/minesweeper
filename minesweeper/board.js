@@ -1,5 +1,6 @@
 import React from "react";
 import Tile from "./tile";
+import cloneBoard from "../utils/clone-board";
 import getRandomInt from "../utils/random-number";
 // import some funcationality some utils
 
@@ -19,8 +20,7 @@ class Board extends React.Component {
         id++;
       }
     }
-    board = this.initialiseBoard(board);
-    return board;
+    return this.initialiseBoard(board);
   }
 
   initialiseBoard(board) {
@@ -48,13 +48,7 @@ class Board extends React.Component {
   }
 
   addMine(board, x, y) {
-    const newBoard = board.map(row =>
-      row.map(tile => ({
-        value: tile.value,
-        displayed: tile.displayed,
-        id: tile.id
-      }))
-    );
+    const newBoard = cloneBoard(board);
     newBoard[x][y].value = "M";
     return newBoard;
   }
