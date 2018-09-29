@@ -11,19 +11,19 @@ import emojiMine from "../public/img/M.png";
 
 class Tile extends React.Component {
   click() {
-    if (this.props.value === "M") {
-      return () => {
-        this.props.parentBoard.endGame(false);
-      };
-    } else if (this.props.parentBoard.state.revealedTiles < 381) {
-      return () => {
-        this.props.parentBoard.revealTile(this.props.id);
-      };
-    } else {
-      return () => {
-        this.props.parentBoard.endGame(true);
-      };
-    }
+    return e => {
+      e.preventDefault();
+      if (e.nativeEvent.which === 1) {
+        // if left click
+        if (this.props.value === "M") this.props.parentBoard.endGame(false);
+        else if (this.props.parentBoard.state.revealedTiles < 381)
+          this.props.parentBoard.revealTile(this.props.id);
+        else this.props.parentBoard.endGame(true);
+      } else if (e.nativeEvent.which === 3) {
+        // if right click
+        console.log("right click");
+      }
+    };
   }
 
   displayEmoji(value) {
@@ -53,6 +53,7 @@ class Tile extends React.Component {
             : "tile"
         }
         onClick={this.props.displayed ? () => {} : this.click()}
+        onContextMenu={this.props.displayed ? () => {} : this.click()}
       >
         {this.props.displayed ? (
           <img
