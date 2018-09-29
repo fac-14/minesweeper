@@ -61,7 +61,7 @@ class Board extends React.Component {
         if (row >= 0 && row < 16 && col >= 0 && col < 30) {
           if (!board[row][col].displayed) {
             board[row][col].displayed = true;
-            board[i][j].marked = false;
+            board[row][col].marked = false;
             if (board[row][col].value == 0) {
               this.revealZeroNeighbours(board, row, col);
             }
