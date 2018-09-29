@@ -72,13 +72,7 @@ class Board extends React.Component {
 
   revealTile(tileId) {
     this.setState(prevState => {
-      const board = prevState.boardArray.map(row =>
-        row.map(tile => ({
-          value: tile.value,
-          displayed: tile.displayed,
-          id: tile.id
-        }))
-      );
+      const board = cloneBoard(prevState.boardArray);
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
           if (board[i][j].id === tileId) {
@@ -128,11 +122,13 @@ class Board extends React.Component {
   render() {
     return (
       <div id="board">
-        <h1>Lose Your MindSweeper </h1>
-        <p>
-          Try to make it through all exercises of this FAC morning challenge
-          without losing your mind in frustration{" "}
-        </p>
+        <div id="board--header">
+          <h1>Lose Your MindSweeper </h1>
+          <p>
+            Try to make it through all exercises of this FAC morning challenge
+            without losing your mind in frustration
+          </p>
+        </div>
         <div id="grid">
           {this.state.boardArray.map(row =>
             row.map(tile => (
