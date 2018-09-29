@@ -1,5 +1,6 @@
 import React from "react";
 import Tile from "./tile";
+import cloneBoard from "../utils/clone-board";
 import getRandomInt from "../utils/random-number";
 // import some funcationality some utils
 
@@ -19,8 +20,7 @@ class Board extends React.Component {
         id++;
       }
     }
-    board = this.initialiseBoard(board);
-    return board;
+    return this.initialiseBoard(board);
   }
 
   initialiseBoard(board) {
@@ -48,13 +48,7 @@ class Board extends React.Component {
   }
 
   addMine(board, x, y) {
-    const newBoard = board.map(row =>
-      row.map(tile => ({
-        value: tile.value,
-        displayed: tile.displayed,
-        id: tile.id
-      }))
-    );
+    const newBoard = cloneBoard(board);
     newBoard[x][y].value = "M";
     return newBoard;
   }
@@ -78,13 +72,7 @@ class Board extends React.Component {
 
   revealTile(tileId) {
     this.setState(prevState => {
-      const board = prevState.boardArray.map(row =>
-        row.map(tile => ({
-          value: tile.value,
-          displayed: tile.displayed,
-          id: tile.id
-        }))
-      );
+      const board = cloneBoard(prevState.boardArray);
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
           if (board[i][j].id === tileId) {
@@ -103,32 +91,44 @@ class Board extends React.Component {
   }
 
   endGame(win) {
-    // if (true) {
-    this.setState(prevState => {
-      const endGameBoard = prevState.boardArray.map(row =>
-        row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
-      );
-      return {
-        boardArray: endGameBoard
-      };
-    });
-    // );
-    //    reveal everything
-    //    add some fun UI
-    // } else {
-    //    reveal everything
-    //    add some anger UI
-    // }
+    if (win) {
+      this.setState(prevState => {
+        const endGameBoard = prevState.boardArray.map(row =>
+          row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
+        );
+        return {
+          boardArray: endGameBoard
+        };
+      });
+      //    add some fun UI
+    } else {
+      this.setState(prevState => {
+        const endGameBoard = prevState.boardArray.map(row =>
+          row.map(tile => ({
+            value: tile.value,
+            displayed: tile.value == "M" ? true : tile.displayed,
+            id: tile.id
+          }))
+        );
+        return {
+          boardArray: endGameBoard
+        };
+      });
+      //    reveal everything
+      //    add some anger UI
+    }
   }
 
   render() {
     return (
       <div id="board">
-        <h1>Lose Your MindSweeper </h1>
-        <p>
-          Try to make it through all exercises of this FAC morning challenge
-          without losing your mind in frustration{" "}
-        </p>
+        <div id="board--header">
+          <h1>Lose Your MindSweeper </h1>
+          <p>
+            Try to make it through all exercises of this FAC morning challenge
+            without losing your mind in frustration
+          </p>
+        </div>
         <div id="grid">
           {this.state.boardArray.map(row =>
             row.map(tile => (

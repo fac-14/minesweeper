@@ -45,7 +45,13 @@ class Tile extends React.Component {
   render() {
     return (
       <div
-        className={this.props.displayed ? "tile tile--revealed" : "tile"}
+        className={
+          this.props.displayed
+            ? this.props.value == "M"
+              ? "tile tile--revealed tile--mine"
+              : "tile tile--revealed"
+            : "tile"
+        }
         onClick={this.props.displayed ? () => {} : this.click()}
       >
         {this.props.displayed ? (
