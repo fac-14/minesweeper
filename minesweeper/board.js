@@ -16,7 +16,7 @@ class Board extends React.Component {
     for (let i = 0; i < x; i++) {
       board.push([]);
       for (let j = 0; j < y; j++) {
-        board[i].push({ value: 0, displayed: false, id });
+        board[i].push({ value: 0, displayed: false, marked: false, id });
         id++;
       }
     }
@@ -61,6 +61,7 @@ class Board extends React.Component {
         if (row >= 0 && row < 16 && col >= 0 && col < 30) {
           if (!board[row][col].displayed) {
             board[row][col].displayed = true;
+            board[i][j].marked = false;
             if (board[row][col].value == 0) {
               this.revealZeroNeighbours(board, row, col);
             }
@@ -77,6 +78,7 @@ class Board extends React.Component {
         for (let j = 0; j < board[i].length; j++) {
           if (board[i][j].id === tileId) {
             board[i][j].displayed = true;
+            board[i][j].marked = false;
             if (board[i][j].value == 0) {
               this.revealZeroNeighbours(board, i, j);
             }
@@ -90,11 +92,32 @@ class Board extends React.Component {
     });
   }
 
+  markTile(tileId) {
+    this.setState(prevState => {
+      const board = cloneBoard(prevState.boardArray);
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+          if (board[i][j].id === tileId) {
+            board[i][j].marked = !board[i][j].marked;
+          }
+        }
+      }
+      return {
+        boardArray: board
+      };
+    });
+  }
+
   endGame(win) {
     if (win) {
       this.setState(prevState => {
         const endGameBoard = prevState.boardArray.map(row =>
-          row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
+          row.map(tile => ({
+            value: tile.value,
+            displayed: true,
+            id: tile.id,
+            marked: false
+          }))
         );
         return {
           boardArray: endGameBoard
@@ -107,7 +130,8 @@ class Board extends React.Component {
           row.map(tile => ({
             value: tile.value,
             displayed: tile.value == "M" ? true : tile.displayed,
-            id: tile.id
+            id: tile.id,
+            marked: false
           }))
         );
         return {
@@ -135,6 +159,7 @@ class Board extends React.Component {
               <Tile
                 value={tile.value}
                 displayed={tile.displayed}
+                marked={tile.marked}
                 id={tile.id}
                 parentBoard={this}
                 key={tile.id}

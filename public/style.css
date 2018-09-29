@@ -66,7 +66,8 @@ body {
   border-color: #7b7b7b;
 }
 
-.tile-emoji {
+.tile-emoji,
+.tile-marked {
   width: 22px;
   height: 22px;
 }
