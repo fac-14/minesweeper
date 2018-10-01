@@ -7,23 +7,24 @@ import emoji4 from "../public/img/4.png";
 import emoji5 from "../public/img/5.png";
 import emoji6 from "../public/img/6.png";
 import emojiMine from "../public/img/M.png";
+import markedTileImage from "../public/img/marked.png";
 // import some funcationality some utils
 
 class Tile extends React.Component {
   click() {
-    if (this.props.value === "M") {
-      return () => {
-        this.props.parentBoard.endGame(false);
-      };
-    } else if (this.props.parentBoard.state.revealedTiles < 381) {
-      return () => {
-        this.props.parentBoard.revealTile(this.props.id);
-      };
-    } else {
-      return () => {
-        this.props.parentBoard.endGame(true);
-      };
-    }
+    return e => {
+      e.preventDefault();
+      if (e.type === "click") {
+        // if left click
+        if (this.props.value === "M") this.props.parentBoard.endGame(false);
+        else if (this.props.parentBoard.state.revealedTiles < 381)
+          this.props.parentBoard.revealTile(this.props.id);
+        else this.props.parentBoard.endGame(true);
+      } else if (e.type === "contextmenu") {
+        // if right click
+        this.props.parentBoard.markTile(this.props.id);
+      }
+    };
   }
 
   displayEmoji(value) {
@@ -53,12 +54,15 @@ class Tile extends React.Component {
             : "tile"
         }
         onClick={this.props.displayed ? () => {} : this.click()}
+        onContextMenu={this.props.displayed ? () => {} : this.click()}
       >
         {this.props.displayed ? (
           <img
             className="tile-emoji"
             src={this.displayEmoji(this.props.value)}
           />
+        ) : this.props.marked ? (
+          <img className="tile-marked" src={markedTileImage} />
         ) : (
           ""
         )}
@@ -70,6 +74,7 @@ class Tile extends React.Component {
 Tile.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   displayed: PropTypes.bool,
+  marked: PropTypes.bool,
   id: PropTypes.number,
   parentBoard: PropTypes.object
 };
