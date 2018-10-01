@@ -8,7 +8,6 @@ import emoji5 from "../public/img/5.png";
 import emoji6 from "../public/img/6.png";
 import emojiMine from "../public/img/M.png";
 import markedTileImage from "../public/img/marked.png";
-// import some funcationality some utils
 
 class Tile extends React.Component {
   click() {
