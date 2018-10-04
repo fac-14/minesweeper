@@ -1,146 +1,143 @@
 import React from "react";
 import Tile from "./tile";
+import cloneBoard from "../utils/clone-board";
 import getRandomInt from "../utils/random-number";
-// import some funcationality some utils
+import getSurroundingTiles from "../utils/get-surrounding-tiles";
 
 class Board extends React.Component {
   state = {
-    boardArray: this.createBoard(16, 30),
+    boardWidth: 30,
+    boardHeight: 16,
+    difficulty: null,
+    board: this.createBoard(30, 16),
     revealedTiles: 0
   };
 
-  createBoard(x, y) {
+  createBoard(width, height) {
     let board = [];
-    let id = 0;
-    for (let i = 0; i < x; i++) {
-      board.push([]);
-      for (let j = 0; j < y; j++) {
-        board[i].push({ value: 0, displayed: false, id });
-        id++;
-      }
+    for (let i = 0; i < width * height; i++) {
+      board.push({ value: 0, displayed: false, marked: false });
     }
-    board = this.initialiseBoard(board);
-    return board;
+    return this.initialiseBoard(board, width, height);
   }
 
-  initialiseBoard(board) {
+  initialiseBoard(board, width, height) {
     let mines = 0;
     while (mines < 99) {
-      let x = getRandomInt(16),
-        y = getRandomInt(30);
-      if (board[x][y].value !== "M") {
+      let tile = getRandomInt(width * height);
+      if (board[tile].value !== "M") {
         mines++;
-        board = this.addMine(board, x, y);
-        for (let i = -1; i < 2; i++) {
-          for (let j = -1; j < 2; j++) {
-            let row = x + i,
-              col = y + j;
-            if (row >= 0 && row < 16 && col >= 0 && col < 30) {
-              if (board[row][col].value !== "M") {
-                board[row][col].value += 1;
-              }
+        board = this.addMine(board, tile);
+        const surroundingTiles = getSurroundingTiles(tile, width);
+        surroundingTiles.forEach(tile => {
+          if (tile > 0 && tile < width * height) {
+            if (board[tile].value !== "M") {
+              board[tile].value += 1;
             }
           }
-        }
+        });
       }
     }
     return board;
   }
 
-  addMine(board, x, y) {
-    const newBoard = board.map(row =>
-      row.map(tile => ({
-        value: tile.value,
-        displayed: tile.displayed,
-        id: tile.id
-      }))
-    );
-    newBoard[x][y].value = "M";
+  addMine(board, tile) {
+    const newBoard = cloneBoard(board);
+    newBoard[tile].value = "M";
     return newBoard;
   }
 
-  revealZeroNeighbours(board, x, y) {
-    for (let i = -1; i < 2; i++) {
-      for (let j = -1; j < 2; j++) {
-        let row = x + i,
-          col = y + j;
-        if (row >= 0 && row < 16 && col >= 0 && col < 30) {
-          if (!board[row][col].displayed) {
-            board[row][col].displayed = true;
-            if (board[row][col].value == 0) {
-              this.revealZeroNeighbours(board, row, col);
-            }
+  revealZeroNeighbours(board, tile) {
+    const surroundingTiles = getSurroundingTiles(tile, this.state.boardWidth);
+    surroundingTiles.forEach(tile => {
+      if (tile > 0 && tile < this.state.boardWidth * this.state.boardHeight) {
+        if (!board[tile].displayed) {
+          board[tile].displayed = true;
+          board[tile].marked = false;
+          if (board[tile].value == 0) {
+            this.revealZeroNeighbours(board, tile);
           }
         }
       }
-    }
+    });
   }
 
-  revealTile(tileId) {
+  revealTile(tile) {
     this.setState(prevState => {
-      const board = prevState.boardArray.map(row =>
-        row.map(tile => ({
-          value: tile.value,
-          displayed: tile.displayed,
-          id: tile.id
-        }))
-      );
-      for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-          if (board[i][j].id === tileId) {
-            board[i][j].displayed = true;
-            if (board[i][j].value == 0) {
-              this.revealZeroNeighbours(board, i, j);
-            }
-          }
-        }
+      const board = cloneBoard(prevState.board);
+      board[tile].displayed = true;
+      board[tile].marked = false;
+      if (board[tile].value == 0) {
+        this.revealZeroNeighbours(board, tile);
       }
       return {
-        boardArray: board,
+        board,
         revealedTiles: prevState.revealedTiles + 1
       };
     });
   }
 
-  endGame(win) {
-    // if (true) {
+  markTile(tile) {
     this.setState(prevState => {
-      const endGameBoard = prevState.boardArray.map(row =>
-        row.map(tile => ({ value: tile.value, displayed: true, id: tile.id }))
-      );
+      const board = cloneBoard(prevState.board);
+      board[tile].marked = !board[tile].marked;
       return {
-        boardArray: endGameBoard
+        board
       };
     });
-    // );
-    //    reveal everything
-    //    add some fun UI
-    // } else {
-    //    reveal everything
-    //    add some anger UI
-    // }
+  }
+
+  endGame(win) {
+    if (win) {
+      this.setState(prevState => {
+        const endGameBoard = prevState.board.map(tile => ({
+          value: tile.value,
+          displayed: true,
+          id: tile.id,
+          marked: false
+        }));
+        return {
+          board: endGameBoard
+        };
+      });
+      //    add some fun UI
+    } else {
+      this.setState(prevState => {
+        const endGameBoard = prevState.board.map(tile => ({
+          value: tile.value,
+          displayed: tile.value == "M" ? true : tile.displayed,
+          id: tile.id,
+          marked: false
+        }));
+        return {
+          board: endGameBoard
+        };
+      });
+      //    add some anger UI
+    }
   }
 
   render() {
     return (
       <div id="board">
-        <h1>Lose Your MindSweeper </h1>
-        <p>
-          Try to make it through all exercises of this FAC morning challenge
-          without losing your mind in frustration{" "}
-        </p>
+        <div id="board--header">
+          <h1>Lose Your MindSweeper </h1>
+          <p>
+            Try to make it through all exercises of this FAC morning challenge
+            without losing your mind in frustration
+          </p>
+        </div>
         <div id="grid">
-          {this.state.boardArray.map(row =>
-            row.map(tile => (
-              <Tile
-                value={tile.value}
-                displayed={tile.displayed}
-                id={tile.id}
-                parentBoard={this}
-                key={tile.id}
-              />
-            ))
-          )}
+          {this.state.board.map((tile, index) => (
+            <Tile
+              value={tile.value}
+              displayed={tile.displayed}
+              marked={tile.marked}
+              id={index}
+              parentBoard={this}
+              key={index}
+            />
+          ))}
         </div>
       </div>
     );
